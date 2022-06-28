@@ -42,7 +42,6 @@ function userController() {
                         message: "Failed to create user."
                     })
                 }
-                git commit -m "first commit"
             } catch (error) {
                 res.json({ message: err })
             }
