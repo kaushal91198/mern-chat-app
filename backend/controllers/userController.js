@@ -57,11 +57,11 @@ function userController() {
                 const user = await User.findOne({
                     email
                 })
-                console.log(user)
+                // console.log(user)
                 // if (user && (await User.matchPasswords(password))) {
                     if (user && (await user.matchPassword(password))) {
 
-                    console.log('fgdnjmnmn')
+                    // console.log('fgdnjmnmn')
                     return res.status(200).json({
                         _id: user._id,
                         name: user.name,
@@ -102,6 +102,7 @@ function userController() {
                 const users = await User.find(keyword).find({ _id: { $ne: req.user._id } })
                 res.status(200).json(users)
             } catch (error) {
+                console.log(error)
                 res.status(500).json({ message: error })
             }
         }

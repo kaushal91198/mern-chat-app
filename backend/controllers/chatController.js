@@ -47,7 +47,7 @@ function chatController() {
         },
         fetchChats: async (req, res) => {
             try {
-                const chat = await ChatModel.find({
+                let chat = await ChatModel.find({
                     users: { $elemMatch: { $eq: req.user._id } },
                 })
                     .populate("users", "-password")
@@ -59,15 +59,17 @@ function chatController() {
                     path: "latestMessage.sender",
                     select: "name pic email",
                 });
-                req.send(chat);
+                // console.log(chat)
+                res.status(200).json(chat);
             } catch (error) {
+                console.log(error)
                 res.status(500).json({ message: error });
             }
         },
         createGroupChat: async (req, res) => {
             try {
                 if (!req.body.users || !req.body.name) {
-                    return res.status.json({ message: "Please fill all the fields" });
+                    return res.status(409).json({ message: "Please fill all the fields" });
                 }
                 let users = JSON.parse(req.body.users);
                 if (users.length < 2) {
@@ -76,6 +78,7 @@ function chatController() {
                     });
                 }
                 users.push(req.user);
+                console.log(users, 'users')
                 const groupChat = await ChatModel.create({
                     chatName: req.body.name,
                     users: users,
@@ -87,6 +90,7 @@ function chatController() {
                     .populate("groupAdmin", "-password");
                 res.status(200).json(fullGroupChat);
             } catch (error) {
+                console.log(error)
                 res.status(500).json({ message: error });
             }
         },
@@ -157,13 +161,14 @@ function chatController() {
                 )
                     .populate("users", "-password")
                     .populate("groupAdmin", "-password");
-                if (!addToGroup) {
+                if (!removeFromGroup) {
                     return res.status(401).json({
                         message: "Chat not found.",
                     });
                 }
                 res.status(200).json(removeFromGroup);
             } catch (error) {
+                console.llog(error)
                 res.status(500).json({ message: error });
             }
         },
