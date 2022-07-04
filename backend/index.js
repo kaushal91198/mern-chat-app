@@ -43,13 +43,12 @@ const io = require('socket.io')(server, {
         origin: 'http://localhost:3000'
     }
 })
-io.on('connection', (socket) => {
-    console.log('connected to socket.io')
-    socket.on('setup', (userData) => {
-        // console.log(userData._id,'gsdfjbjbj')
-        socket.join(userData._id)
-        socket.emit('connection')
-    })
+io.on("connection", (socket) => {
+    console.log("Connected to socket.io");
+    socket.on("setup", (userData) => {
+        socket.join(userData._id);
+        socket.emit("connected");
+    });
 
     socket.on('join chat', (room) => {
         socket.join(room)
@@ -61,19 +60,25 @@ io.on('connection', (socket) => {
         if (!chat.users) {
             return console.log('chat.users not defined.')
         }
+        // console.log(newMessageReceived.chat._id, "message receiev")
+        // socket.to().emit('message received', newMessageReceived)
         chat.users.forEach(user => {
-            //we don't want emit event to sender
+            // we don't want emit event to sender
             if (user._id == newMessageReceived.sender._id) {
                 return
             }
+            // this function emit the events everyone in the room
             socket.in(user._id).emit('message received', newMessageReceived)
+            //this function  emit the events everyone except sender
+            // socket.to(user._id).emit('message received', newMessageReceived)
             // console.log('dsgfjhkgfhj')
         })
+        console.log(socket.rooms)
 
     })
 
     socket.on('typing', (room) => {
-        console.log(room,'typing')
+        console.log(room, 'typing')
         socket.in(room).emit('typing')
     })
     socket.on('stop typing', (room) => socket.in(room).emit('stop typing'))
