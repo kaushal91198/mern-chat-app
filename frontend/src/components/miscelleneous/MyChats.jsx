@@ -38,7 +38,7 @@ const MyChats = ({ fetchAgain }) => {
 
   useEffect(() => {
     fetchChats();
-  }, [fetchAgain]);
+  }, [fetchAgain,selectedChat]);
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}

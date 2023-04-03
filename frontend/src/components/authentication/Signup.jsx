@@ -88,9 +88,8 @@ const Signup = () => {
         { name, email, password, pic },
         config
       );
-      localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      history.push("/chats");
+      window.location = "/"
     } catch (error) {
       toast({
         title: "Error Occurred!",

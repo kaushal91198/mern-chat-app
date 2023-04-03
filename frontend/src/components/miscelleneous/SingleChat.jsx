@@ -125,11 +125,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
       if (
-        !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageReceived.chat._id
+        selectedChatCompare && // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id === newMessageReceived.chat._id
       ) {
-      } else {
         setMessages([...messages, newMessageReceived]);
+      } 
+      else if(!selectedChatCompare){
+        setSelectedChat(()=>newMessageReceived.chat)
       }
     });
   });
